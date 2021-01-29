@@ -1,0 +1,9 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "username": "postgres",
+  "password": "admin",
+  "database": "registration",
+  "logging": false,
+  "entities": ["./src/models/index.ts"]
+}
