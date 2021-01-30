@@ -6,7 +6,11 @@ import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 
-import { CustomerResolver } from "./resolvers";
+import {
+  CustomerResolver,
+  CompanyResolver,
+  AppointmentResolver
+} from "./resolvers";
 
 const main = async () => {
   dotenv.config();
@@ -16,7 +20,7 @@ const main = async () => {
   await connection.synchronize();
 
   const schema = await buildSchema({
-    resolvers: [CustomerResolver]
+    resolvers: [CustomerResolver, CompanyResolver, AppointmentResolver]
   });
 
   const app = express();
