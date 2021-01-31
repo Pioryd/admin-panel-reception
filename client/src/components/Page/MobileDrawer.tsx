@@ -4,7 +4,7 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { SwipeableDrawer, IconButton } from "@material-ui/core";
 import { Menu as MenuIcon } from "@material-ui/icons";
 
-import { Items } from "./Items";
+import Items from "./Items";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export function MobileDrawer() {
+export default function MobileDrawer() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 

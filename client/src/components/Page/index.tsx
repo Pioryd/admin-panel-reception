@@ -13,8 +13,8 @@ import {
   Typography
 } from "@material-ui/core";
 
-import { DesktopDrawer } from "./DesktopDrawer";
-import { MobileDrawer } from "./MobileDrawer";
+import DesktopDrawer from "./DesktopDrawer";
+import MobileDrawer from "./MobileDrawer";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export function Page(props: { children: React.ReactNode }) {
+export default function Page(props: { children: React.ReactNode }) {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
 

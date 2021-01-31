@@ -1,3 +1,6 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
 import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import {
   Home as HomeIcon,
@@ -7,17 +10,17 @@ import {
 } from "@material-ui/icons";
 
 const items = [
-  { text: "Home", link: "", Icon: HomeIcon },
-  { text: "Appointments", link: "", Icon: EventIcon },
-  { text: "Companies", link: "", Icon: BusinessCenterIcon },
-  { text: "Customers", link: "", Icon: PeopleIcon }
+  { text: "Home", link: "/home", Icon: HomeIcon },
+  { text: "Appointments", link: "/appointments", Icon: EventIcon },
+  { text: "Companies", link: "/companies", Icon: BusinessCenterIcon },
+  { text: "Customers", link: "/customers", Icon: PeopleIcon }
 ];
 
-export function Items() {
+export default function Items() {
   return (
     <List>
-      {items.map(({ text, Icon }) => (
-        <ListItem button key={text}>
+      {items.map(({ text, link, Icon }) => (
+        <ListItem button key={text} component={Link} to={link}>
           <ListItemIcon>
             <Icon />
           </ListItemIcon>
