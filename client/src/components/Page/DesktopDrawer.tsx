@@ -5,16 +5,14 @@ import { Drawer, Toolbar } from "@material-ui/core";
 
 import Items from "./Items";
 
-const drawerWidth = 240;
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     drawer: {
-      width: drawerWidth,
+      width: (props: { width: number }) => props.width,
       flexShrink: 0
     },
     drawerPaper: {
-      width: drawerWidth
+      width: (props: { width: number }) => props.width
     },
     drawerContainer: {
       overflow: "auto"
@@ -22,8 +20,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function DesktopDrawer() {
-  const classes = useStyles();
+export default function DesktopDrawer(props: { width: number }) {
+  const classes = useStyles({ width: props.width });
 
   return (
     <Drawer

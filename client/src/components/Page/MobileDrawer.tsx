@@ -12,13 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "auto"
     },
     openButton: {
-      position: "absolute",
-      zIndex: theme.zIndex.drawer + 1,
-      height: "55px",
       color: theme.palette.primary.contrastText
-    },
-    closeButton: {
-      position: "relative"
     }
   })
 );
@@ -67,11 +61,7 @@ export default function MobileDrawer() {
         onClick={toggleDrawer(false)}
         onKeyDown={toggleDrawer(false)}
       >
-        <IconButton
-          className={classes.closeButton}
-          aria-label="close drawer"
-          edge="end"
-        >
+        <IconButton aria-label="close drawer" edge="end">
           <MenuIcon />
         </IconButton>
         <Items />
