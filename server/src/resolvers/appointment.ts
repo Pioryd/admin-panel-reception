@@ -1,11 +1,13 @@
 import { Query, Resolver, Arg, Mutation, Int } from "type-graphql";
 
+import { AppointmentPaginatedResponse } from "../types/paginated-response";
+
 import * as Models from "../models";
 import * as Services from "../services";
 
 @Resolver()
 export class AppointmentResolver {
-  @Query(() => [Models.Appointment])
+  @Query(() => AppointmentPaginatedResponse)
   async getAppointments(
     @Arg("customerName", () => String, { nullable: true }) customerName: string,
     @Arg("customerId", () => Int, { nullable: true }) customerId: number,
@@ -13,30 +15,36 @@ export class AppointmentResolver {
     @Arg("companyId", () => Int, { nullable: true }) companyId: number,
     @Arg("date", () => String, { nullable: true }) date: string,
     @Arg("hour", () => Int, { nullable: true }) hour: number,
-    @Arg("limit", () => Int, { nullable: true }) limit: number
-  ): Promise<Models.Appointment[]> {
+    @Arg("limit", () => Int, { nullable: true }) limit: number,
+    @Arg("page", () => Int, { nullable: true }) page: number
+  ): Promise<AppointmentPaginatedResponse> {
     let customers: Models.Customer[] = [];
     if (customerId != null || customerName != null)
-      customers = await Services.Customer.get({
-        id: customerId,
-        name: customerName,
-        limit: 1
-      });
+      customers = (
+        await Services.Customer.get({
+          id: customerId,
+          name: customerName,
+          limit: 1
+        })
+      ).items;
 
     let companies: Models.Company[] = [];
     if (companyId != null || companyName != null)
-      companies = await Services.Company.get({
-        id: companyId,
-        name: companyName,
-        limit: 1
-      });
+      companies = (
+        await Services.Company.get({
+          id: companyId,
+          name: companyName,
+          limit: 1
+        })
+      ).items;
 
     return await Services.Appointment.get({
       customer: customers[0],
       company: companies[0],
       date,
       hour,
-      limit
+      limit,
+      page
     });
   }
 

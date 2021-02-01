@@ -1,6 +1,8 @@
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { FindManyOptions } from "typeorm/find-options/FindManyOptions";
 
+import { AppointmentPaginatedResponse } from "../types/paginated-response";
+
 import * as Models from "../models";
 
 export async function get(data?: {
@@ -9,32 +11,44 @@ export async function get(data?: {
   date?: string;
   hour?: number;
   limit?: number;
-}): Promise<Models.Appointment[]> {
+  page?: number;
+}): Promise<AppointmentPaginatedResponse> {
   const SEARCH_LIMIT = Number(process.env.SEARCH_LIMIT);
+
+  const totalItems = await Models.Appointment.createQueryBuilder("log_entry")
+    .select("DISTINCT(`sender_id`)")
+    .getCount();
+  const totalPages = Math.max(Math.ceil(totalItems / SEARCH_LIMIT), 1);
+
+  let page = 1;
+  let limit = SEARCH_LIMIT;
 
   const findOptions: FindManyOptions<Models.Appointment> = {};
   findOptions.where = {};
   findOptions.take = SEARCH_LIMIT;
 
   if (data != null) {
-    if (data.customer != null) {
-      findOptions.where.customer = data.customer;
-    }
-    if (data.company != null) {
-      findOptions.where.company = data.company;
-    }
-    if (data.date != null) {
-      findOptions.where.date = data.date;
-    }
-    if (data.hour != null) {
-      findOptions.where.hour = data.hour;
-    }
-    if (data.limit != null) {
-      findOptions.take = Math.max(Math.min(SEARCH_LIMIT, data.limit), 1);
-    }
+    if (data.customer != null) findOptions.where.customer = data.customer;
+    if (data.company != null) findOptions.where.company = data.company;
+    if (data.date != null) findOptions.where.date = data.date;
+    if (data.hour != null) findOptions.where.hour = data.hour;
+    if (data.limit != null) limit = data.limit;
+    if (data.page != null) page = data.page;
   }
 
-  return await Models.Appointment.find(findOptions);
+  limit = Math.max(Math.min(limit, SEARCH_LIMIT), 1);
+  page = Math.max(Math.min(page, totalPages), 1);
+
+  findOptions.skip = (page - 1) * SEARCH_LIMIT;
+  findOptions.take = limit;
+  limit = Math.max(Math.min(SEARCH_LIMIT, limit), 1);
+
+  return Object.assign(new AppointmentPaginatedResponse(), {
+    items: await Models.Appointment.find(findOptions),
+    currentPage: page,
+    totalPages,
+    count: totalItems
+  });
 }
 
 export async function create(data: {

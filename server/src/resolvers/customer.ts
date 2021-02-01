@@ -1,17 +1,20 @@
 import { Query, Resolver, Arg, Mutation, Int } from "type-graphql";
 
+import { CustomerPaginatedResponse } from "../types/paginated-response";
+
 import * as Models from "../models";
 import * as Services from "../services";
 
 @Resolver()
 export class CustomerResolver {
-  @Query(() => [Models.Customer])
+  @Query(() => CustomerPaginatedResponse)
   async getCustomers(
     @Arg("id", () => Int, { nullable: true }) id: number,
     @Arg("name", () => String, { nullable: true }) name: string,
-    @Arg("limit", () => Int, { nullable: true }) limit: number
-  ): Promise<Models.Customer[]> {
-    return await Services.Customer.get({ id, name, limit });
+    @Arg("limit", () => Int, { nullable: true }) limit: number,
+    @Arg("page", () => Int, { nullable: true }) page: number
+  ): Promise<CustomerPaginatedResponse> {
+    return await Services.Customer.get({ id, name, limit, page });
   }
 
   @Mutation(() => Models.Customer)
