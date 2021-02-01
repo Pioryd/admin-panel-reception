@@ -6,9 +6,9 @@ async function generateDemo() {
   await connection.dropDatabase();
   await connection.synchronize();
 
-  const APPOINTMENTS_COUNT = 11;
-  const COMPANIES_COUNT = 12;
-  const CUSTOMERS_COUNT = 13;
+  const APPOINTMENTS_COUNT = 96;
+  const COMPANIES_COUNT = 97;
+  const CUSTOMERS_COUNT = 98;
 
   const customers: { [key: string]: Modles.Customer } = {};
   for (let i = 1; i <= CUSTOMERS_COUNT; i++) {

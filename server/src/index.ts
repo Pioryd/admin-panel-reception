@@ -2,6 +2,7 @@ import "reflect-metadata";
 import path from "path";
 import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
 import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
@@ -24,6 +25,11 @@ const main = async () => {
   });
 
   const app = express();
+
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  app.use(cors());
 
   app.use(
     "/graphql",
