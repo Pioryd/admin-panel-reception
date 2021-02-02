@@ -22,6 +22,18 @@ export class Customer extends BaseEntity {
   @Column()
   name: string = "";
 
+  @Field(() => String)
+  @Column()
+  email: string = "";
+
+  @Field(() => String)
+  @Column()
+  phone: string = "";
+
+  @Field(() => String)
+  @Column()
+  created: Date = new Date();
+
   @Field(() => [Appointment])
   @OneToMany(() => Appointment, (appointment) => appointment.customer)
   appointments!: Appointment[];

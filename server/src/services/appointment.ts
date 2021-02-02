@@ -16,7 +16,7 @@ export async function get(data?: {
   const SEARCH_LIMIT = Number(process.env.SEARCH_LIMIT);
 
   const totalItems = await Models.Appointment.createQueryBuilder("log_entry")
-    .select("DISTINCT(`sender_id`)")
+    .select("DISTINCT()")
     .getCount();
   const totalPages = Math.max(Math.ceil(totalItems / SEARCH_LIMIT), 1);
 

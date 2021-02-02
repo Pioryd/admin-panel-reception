@@ -20,6 +20,9 @@ import { Add as AddIcon, Delete as DeleteIcon } from "@material-ui/icons";
 interface CompanyData {
   id?: number;
   name?: string;
+  email?: string;
+  phone?: string;
+  created?: string;
 }
 
 interface Response {
@@ -41,11 +44,14 @@ interface Vars {
 }
 
 const GET_COMPANIES = gql`
-  query GetCompanies($page: Int!) {
+  query GetCompanies($page: Int! = 1) {
     getCompanies(page: $page) {
       items {
         id
         name
+        email
+        phone
+        created
       }
       currentPage
       totalPages
@@ -81,7 +87,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Companies() {
   const classes = useStyles();
 
-  const [page, setPage] = React.useState(0);
   const [response, setResponse] = React.useState<Response>({
     items: new Array<CompanyData>(),
     currentPage: 1,
@@ -89,15 +94,16 @@ export default function Companies() {
     count: 1
   });
 
-  const { loading, error, data } = useQuery<Data, Vars>(GET_COMPANIES, {
-    variables: { page }
-  });
+  const { loading, error, data, refetch } = useQuery<Data, Vars>(
+    GET_COMPANIES,
+    { notifyOnNetworkStatusChange: true }
+  );
 
   React.useEffect(() => {
     if (loading || data == null) return;
     // to prevent clear table on change page
     setResponse(data.getCompanies);
-  }, [data]);
+  }, [data, loading]);
 
   if (error)
     return (
@@ -130,8 +136,10 @@ export default function Companies() {
           <TableHead>
             <TableRow className={classes.tableRow}>
               <TableCell>ID</TableCell>
-              <TableCell align="center">Name</TableCell>
-              <TableCell align="right">Appointments</TableCell>
+              <TableCell align="left">Name</TableCell>
+              <TableCell align="left">Email</TableCell>
+              <TableCell align="left">Phone</TableCell>
+              <TableCell align="left">Create date</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
@@ -139,11 +147,15 @@ export default function Companies() {
             {response.items.map((row) => (
               <TableRow className={classes.tableRow} key={row.id}>
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {row.id}
                 </TableCell>
-                <TableCell align="right">{row.name}</TableCell>
-                <TableCell align="right">{0}</TableCell>
-                <TableCell align="right">
+                <TableCell align="left">{row.name}</TableCell>
+                <TableCell align="left">{row.email}</TableCell>
+                <TableCell align="left">{row.phone}</TableCell>
+                <TableCell align="left">
+                  {new Date(Number(row.created)).toLocaleDateString("en-US")}
+                </TableCell>
+                <TableCell align="center">
                   <Button
                     variant="contained"
                     color="primary"
@@ -163,7 +175,7 @@ export default function Companies() {
         page={response.currentPage}
         siblingCount={0}
         boundaryCount={1}
-        onChange={(event, page) => setPage(page)}
+        onChange={(event, page) => refetch({ page })}
       />
     </>
   );

@@ -11,17 +11,30 @@ export class CustomerResolver {
   async getCustomers(
     @Arg("id", () => Int, { nullable: true }) id: number,
     @Arg("name", () => String, { nullable: true }) name: string,
+    @Arg("email", () => String, { nullable: true }) email: string,
+    @Arg("phone", () => String, { nullable: true }) phone: string,
+    @Arg("created", () => String, { nullable: true }) created: string,
     @Arg("limit", () => Int, { nullable: true }) limit: number,
     @Arg("page", () => Int, { nullable: true }) page: number
   ): Promise<CustomerPaginatedResponse> {
-    return await Services.Customer.get({ id, name, limit, page });
+    return await Services.Customer.get({
+      id,
+      name,
+      email,
+      phone,
+      created,
+      limit,
+      page
+    });
   }
 
   @Mutation(() => Models.Customer)
   async createCustomer(
-    @Arg("name", () => String) name: string
+    @Arg("name", () => String) name: string,
+    @Arg("email", () => String) email: string,
+    @Arg("phone", () => String) phone: string
   ): Promise<Models.Customer> {
-    return await Services.Customer.create({ name });
+    return await Services.Customer.create({ name, email, phone });
   }
 
   @Mutation(() => Boolean)
@@ -33,9 +46,11 @@ export class CustomerResolver {
   @Mutation(() => Boolean)
   async updateCustomer(
     @Arg("id", () => Int) id: number,
-    @Arg("name", () => String) name: string
+    @Arg("name", () => String) name: string,
+    @Arg("email", () => String) email: string,
+    @Arg("phone", () => String) phone: string
   ) {
-    await Services.Customer.update({ id, name });
+    await Services.Customer.update({ id, name, email, phone });
     return true;
   }
 }
