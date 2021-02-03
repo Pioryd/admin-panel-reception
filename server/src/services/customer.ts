@@ -46,7 +46,7 @@ export async function get(data?: {
   limit = Math.max(Math.min(SEARCH_LIMIT, limit), 1);
 
   return Object.assign(new CustomerPaginatedResponse(), {
-    items: await Models.Company.find(findOptions),
+    items: await Models.Customer.find(findOptions),
     currentPage: page,
     totalPages,
     count: totalItems
