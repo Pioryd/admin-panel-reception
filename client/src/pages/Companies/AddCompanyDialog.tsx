@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function AddUserDialog(props: {
+export default function AddCompanyDialog(props: {
   open: boolean;
   onClose: () => void;
   onAdd: () => void;

@@ -21,7 +21,7 @@ export interface Vars {
   page?: number;
 }
 
-const GET_CUSTOMER = gql`
+const GET_CUSTOMERS = gql`
   query GetCustomers($page: Int! = 1) {
     getCustomers(page: $page) {
       items {
@@ -47,9 +47,12 @@ export default function useGetCustomers() {
     count: 1
   });
 
-  const { loading, error, data, refetch } = useQuery<Data, Vars>(GET_CUSTOMER, {
-    notifyOnNetworkStatusChange: true
-  });
+  const { loading, error, data, refetch } = useQuery<Data, Vars>(
+    GET_CUSTOMERS,
+    {
+      notifyOnNetworkStatusChange: true
+    }
+  );
 
   React.useEffect(() => {
     if (!loading && data != null) setResponse(data.getCustomers);

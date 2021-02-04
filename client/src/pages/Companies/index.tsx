@@ -12,7 +12,7 @@ import useAddCompany from "./graphQL/useAddCompany";
 import useRemoveCompany from "./graphQL/useRemoveCompany";
 
 import Table from "./Table";
-import AddUserDialog from "./AddUserDialog";
+import AddCompanyDialog from "./AddCompanyDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,7 +51,9 @@ export default function Companies() {
   const mutationAddCompany = useAddCompany();
   const mutationRemoveCompany = useRemoveCompany();
 
-  const [dialogAddUserOpened, setDialogAddUserOpened] = React.useState(false);
+  const [dialogAddCompanyOpened, setDialogAddCompanyOpened] = React.useState(
+    false
+  );
 
   const addCompany = async () => {
     try {
@@ -149,9 +151,9 @@ export default function Companies() {
         <CircularProgress className={classes.loadingIcon} />
       )}
 
-      <AddUserDialog
-        open={dialogAddUserOpened}
-        onClose={() => setDialogAddUserOpened(false)}
+      <AddCompanyDialog
+        open={dialogAddCompanyOpened}
+        onClose={() => setDialogAddCompanyOpened(false)}
         onAdd={addCompany}
         onUpdateName={setName}
         onUpdateEmail={setEmail}
@@ -163,7 +165,7 @@ export default function Companies() {
           <Button
             className={classes.topButton}
             startIcon={<AddIcon />}
-            onClick={() => setDialogAddUserOpened(true)}
+            onClick={() => setDialogAddCompanyOpened(true)}
           >
             Add
           </Button>
@@ -175,6 +177,10 @@ export default function Companies() {
           >
             Refresh
           </Button>
+
+          <Typography align="center" variant="h5">
+            Companies
+          </Typography>
         </>
 
         <Table

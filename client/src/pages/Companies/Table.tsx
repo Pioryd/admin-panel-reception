@@ -34,7 +34,7 @@ export default function Table(props: {
 
   return (
     <TableContainer component={Paper}>
-      <MuiTable size="small" aria-label="companies data">
+      <MuiTable size="small" aria-label="Companies data">
         <TableHead>
           <TableRow className={classes.tableRow}>
             <TableCell>ID</TableCell>

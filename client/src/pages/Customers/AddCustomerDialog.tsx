@@ -35,7 +35,7 @@ export default function AddCustomerDialog(props: {
       onClose={props.onClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Add company</DialogTitle>
+      <DialogTitle id="form-dialog-title">Add customer</DialogTitle>
       <DialogContent>
         <TextField
           className={classes.textField}
