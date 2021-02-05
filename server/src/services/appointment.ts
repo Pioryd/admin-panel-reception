@@ -15,9 +15,7 @@ export async function get(data?: {
 }): Promise<AppointmentPaginatedResponse> {
   const SEARCH_LIMIT = Number(process.env.SEARCH_LIMIT);
 
-  const totalItems = await Models.Appointment.createQueryBuilder("log_entry")
-    .select("DISTINCT()")
-    .getCount();
+  const totalItems = await Models.Appointment.count();
   const totalPages = Math.max(Math.ceil(totalItems / SEARCH_LIMIT), 1);
 
   let page = 1;
@@ -26,6 +24,7 @@ export async function get(data?: {
   const findOptions: FindManyOptions<Models.Appointment> = {};
   findOptions.where = {};
   findOptions.take = SEARCH_LIMIT;
+  findOptions.order = { id: "ASC" };
 
   if (data != null) {
     if (data.customer != null) findOptions.where.customer = data.customer;
@@ -41,7 +40,6 @@ export async function get(data?: {
 
   findOptions.skip = (page - 1) * SEARCH_LIMIT;
   findOptions.take = limit;
-  limit = Math.max(Math.min(SEARCH_LIMIT, limit), 1);
 
   return Object.assign(new AppointmentPaginatedResponse(), {
     items: await Models.Appointment.find(findOptions),
@@ -91,4 +89,12 @@ export async function update(data: {
 
   await Models.Appointment.update({ id: data.id }, query);
   return true;
+}
+
+export async function getHoursTotal() {
+  const hours: number[] = [];
+  for (let i = 0; i < 24; i++)
+    hours[i] = await Models.Appointment.count({ where: { hour: i + 1 } });
+
+  return hours;
 }

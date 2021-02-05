@@ -48,6 +48,11 @@ export class AppointmentResolver {
     });
   }
 
+  @Query(() => [String])
+  async getHoursTotal() {
+    return await Services.Appointment.getHoursTotal();
+  }
+
   @Mutation(() => Models.Appointment)
   async createAppointment(
     @Arg("companyId", () => Int) companyId: number,
