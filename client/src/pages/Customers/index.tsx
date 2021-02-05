@@ -55,13 +55,21 @@ export default function Customers() {
     false
   );
 
+  const getCustomers = async (page: number) => {
+    try {
+      await queryGetCustomers.refetch({ page });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const addCustomer = async () => {
     try {
       await mutationAddCustomer.fetch({ variables: { name, email, phone } });
 
       if (mounted.current !== true) return;
 
-      queryGetCustomers.refetch({
+      await queryGetCustomers.refetch({
         page: queryGetCustomers.response.currentPage
       });
     } catch (err) {
@@ -75,7 +83,7 @@ export default function Customers() {
 
       if (mounted.current !== true) return;
 
-      queryGetCustomers.refetch({
+      await queryGetCustomers.refetch({
         page: queryGetCustomers.response.currentPage
       });
     } catch (err) {
@@ -83,12 +91,15 @@ export default function Customers() {
     }
   };
 
-  const reloadCustomers = () =>
-    queryGetCustomers
-      .refetch({
+  const reloadCustomers = async () => {
+    try {
+      await queryGetCustomers.refetch({
         page: queryGetCustomers.response.currentPage
-      })
-      .catch((err) => console.log(err));
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   React.useEffect(() => {
     mounted.current = true;
@@ -194,7 +205,7 @@ export default function Customers() {
           page={queryGetCustomers.response.currentPage}
           siblingCount={0}
           boundaryCount={1}
-          onChange={(event, page) => queryGetCustomers.refetch({ page })}
+          onChange={(event, page) => getCustomers(page)}
         />
       </>
     </Box>

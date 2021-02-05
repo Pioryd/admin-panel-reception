@@ -57,6 +57,14 @@ export default function Companies() {
     false
   );
 
+  const getCompanies = async (page: number) => {
+    try {
+      await queryGetCompanies.refetch({ page });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const addCompany = async () => {
     try {
       await mutationAddCompany.fetch({
@@ -65,7 +73,7 @@ export default function Companies() {
 
       if (mounted.current !== true) return;
 
-      queryGetCompanies.refetch({
+      await queryGetCompanies.refetch({
         page: queryGetCompanies.response.currentPage
       });
     } catch (err) {
@@ -79,7 +87,7 @@ export default function Companies() {
 
       if (mounted.current !== true) return;
 
-      queryGetCompanies.refetch({
+      await queryGetCompanies.refetch({
         page: queryGetCompanies.response.currentPage
       });
     } catch (err) {
@@ -87,12 +95,15 @@ export default function Companies() {
     }
   };
 
-  const reloadCompanies = () =>
-    queryGetCompanies
-      .refetch({
+  const reloadCompanies = async () => {
+    try {
+      await queryGetCompanies.refetch({
         page: queryGetCompanies.response.currentPage
-      })
-      .catch((err) => console.log(err));
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   React.useEffect(() => {
     mounted.current = true;
@@ -200,7 +211,7 @@ export default function Companies() {
           page={queryGetCompanies.response.currentPage}
           siblingCount={0}
           boundaryCount={1}
-          onChange={(event, page) => queryGetCompanies.refetch({ page })}
+          onChange={(event, page) => getCompanies(page)}
         />
       </>
     </Box>

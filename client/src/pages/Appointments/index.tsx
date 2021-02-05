@@ -57,6 +57,14 @@ export default function Appointments() {
     setDialogAddAppointmentOpened
   ] = React.useState(false);
 
+  const getAppointments = async (page: number) => {
+    try {
+      await queryGetAppointments.refetch({ page });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const addAppointment = async () => {
     try {
       await mutationAddAppointment.fetch({
@@ -65,7 +73,7 @@ export default function Appointments() {
 
       if (mounted.current !== true) return;
 
-      queryGetAppointments.refetch({
+      await queryGetAppointments.refetch({
         page: queryGetAppointments.response.currentPage
       });
     } catch (err) {
@@ -79,7 +87,7 @@ export default function Appointments() {
 
       if (mounted.current !== true) return;
 
-      queryGetAppointments.refetch({
+      await queryGetAppointments.refetch({
         page: queryGetAppointments.response.currentPage
       });
     } catch (err) {
@@ -87,12 +95,15 @@ export default function Appointments() {
     }
   };
 
-  const reloadAppointments = () =>
-    queryGetAppointments
-      .refetch({
+  const reloadAppointments = async () => {
+    try {
+      await queryGetAppointments.refetch({
         page: queryGetAppointments.response.currentPage
-      })
-      .catch((err) => console.log(err));
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   React.useEffect(() => {
     mounted.current = true;
@@ -199,7 +210,7 @@ export default function Appointments() {
           page={queryGetAppointments.response.currentPage}
           siblingCount={0}
           boundaryCount={1}
-          onChange={(event, page) => queryGetAppointments.refetch({ page })}
+          onChange={(event, page) => getAppointments(page)}
         />
       </>
     </>
