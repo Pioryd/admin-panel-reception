@@ -10,15 +10,16 @@ export async function get(data?: {
   name?: string;
   email?: string;
   phone?: string;
+  hoursFrom?: number;
+  hoursTo?: number;
   created?: string;
   limit?: number;
   page?: number;
 }): Promise<CompanyPaginatedResponse> {
   const SEARCH_LIMIT = Number(process.env.SEARCH_LIMIT);
 
-  const totalItems = await Models.Company.createQueryBuilder("log_entry")
-    .select("DISTINCT()")
-    .getCount();
+  const totalItems = await Models.Company.count();
+
   const totalPages = Math.max(Math.ceil(totalItems / SEARCH_LIMIT), 1);
 
   let page = 1;
@@ -27,12 +28,15 @@ export async function get(data?: {
   const findOptions: FindManyOptions<Models.Company> = {};
   findOptions.where = {};
   findOptions.take = SEARCH_LIMIT;
+  findOptions.order = { id: "ASC" };
 
   if (data != null) {
     if (data.id != null) findOptions.where.id = data.id;
     if (data.name != null) findOptions.where.name = data.name;
     if (data.email != null) findOptions.where.email = data.email;
     if (data.phone != null) findOptions.where.phone = data.phone;
+    if (data.hoursFrom != null) findOptions.where.hoursFrom = data.hoursFrom;
+    if (data.hoursTo != null) findOptions.where.hoursTo = data.hoursTo;
     if (data.created != null) findOptions.where.created = data.created;
     if (data.limit != null) limit = data.limit;
     if (data.page != null) page = data.page;
@@ -43,7 +47,6 @@ export async function get(data?: {
 
   findOptions.skip = (page - 1) * SEARCH_LIMIT;
   findOptions.take = limit;
-  limit = Math.max(Math.min(SEARCH_LIMIT, limit), 1);
 
   return Object.assign(new CompanyPaginatedResponse(), {
     items: await Models.Company.find(findOptions),
@@ -57,6 +60,8 @@ export async function create(data: {
   name: string;
   email: string;
   phone: string;
+  hoursFrom: number;
+  hoursTo: number;
 }): Promise<Models.Company> {
   const company = Models.Company.create({ ...data, created: new Date() });
   await company.save();
@@ -75,12 +80,16 @@ export async function update(data: {
   name?: string;
   email?: string;
   phone?: string;
+  hoursFrom: number;
+  hoursTo: number;
 }) {
   const partialEntity: QueryDeepPartialEntity<Models.Company> = {};
   if (data != null) {
     if (data.name != null) partialEntity.name = data.name;
     if (data.email != null) partialEntity.email = data.email;
     if (data.phone != null) partialEntity.phone = data.phone;
+    if (data.hoursFrom != null) partialEntity.hoursFrom = data.hoursFrom;
+    if (data.hoursTo != null) partialEntity.hoursTo = data.hoursTo;
   }
 
   await Models.Company.update({ id: data.id }, partialEntity);

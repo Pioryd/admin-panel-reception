@@ -26,6 +26,8 @@ export default function AddCompanyDialog(props: {
   onUpdateName: (value: string) => void;
   onUpdateEmail: (value: string) => void;
   onUpdatePhone: (value: string) => void;
+  onUpdateHoursFrom: (value: number) => void;
+  onUpdateHoursTo: (value: number) => void;
 }) {
   const classes = useStyles();
 
@@ -66,6 +68,26 @@ export default function AddCompanyDialog(props: {
           type="number"
           fullWidth
           onChange={(e) => props.onUpdatePhone(e.target.value)}
+        />
+        <TextField
+          className={classes.textField}
+          autoFocus
+          margin="dense"
+          id="HoursFrom"
+          label="Hours from"
+          type="number"
+          fullWidth
+          onChange={(e) => props.onUpdateHoursFrom(Number(e.target.value))}
+        />
+        <TextField
+          className={classes.textField}
+          autoFocus
+          margin="dense"
+          id="HoursTo"
+          label="Hours to"
+          type="number"
+          fullWidth
+          onChange={(e) => props.onUpdateHoursTo(Number(e.target.value))}
         />
       </DialogContent>
       <DialogActions>

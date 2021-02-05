@@ -118,7 +118,7 @@ export default function Customers() {
     );
 
   return (
-    <>
+    <Box>
       <SnackbarAlert
         severity="error"
         toggleOpen={mutationAddCustomer.error != null}
@@ -197,6 +197,6 @@ export default function Customers() {
           onChange={(event, page) => queryGetCustomers.refetch({ page })}
         />
       </>
-    </>
+    </Box>
   );
 }

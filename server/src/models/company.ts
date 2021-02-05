@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, Int, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -29,6 +29,14 @@ export class Company extends BaseEntity {
   @Field(() => String)
   @Column()
   phone: string = "";
+
+  @Field(() => Int)
+  @Column()
+  hoursFrom: number = 1;
+
+  @Field(() => Int)
+  @Column()
+  hoursTo: number = 1;
 
   @Field(() => String)
   @Column()

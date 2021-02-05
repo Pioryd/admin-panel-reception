@@ -62,6 +62,12 @@ export async function create(data: {
     where: { id: data.customerId }
   });
 
+  if (company == null) throw new Error("Company not found.");
+  if (customer == null) throw new Error("Customer not found.");
+
+  if (data.hour < company.hoursFrom || data.hour > company.hoursTo)
+    throw new Error("Hours is not allowed by company.");
+
   const appointment = await Models.Appointment.create({
     company,
     customer,

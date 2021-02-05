@@ -2,18 +2,15 @@ import { createConnection } from "typeorm";
 import * as Models from "../src/models";
 
 const config = {
-  customersCount: 96,
-  companiesCount: 98,
+  customersCount: 256,
+  companiesCount: 96,
   appointmentsPerCustomerMin: 5,
   appointmentsPerCustomerMax: 16,
 
   emailLengthMin: 7,
   emailLengthMax: 20,
 
-  phoneLength: 9,
-
-  appointmentsHoursFrom: 8,
-  appointmentsHoursTo: 20
+  phoneLength: 9
 };
 
 function getRandomIntInclusive(min: number, max: number) {
@@ -72,6 +69,8 @@ async function generateDemo() {
     companies[name].name = name;
     companies[name].email = randomEmail();
     companies[name].phone = randomPhone();
+    companies[name].hoursFrom = getRandomIntInclusive(1, 12);
+    companies[name].hoursTo = getRandomIntInclusive(13, 24);
     companies[name].created = new Date();
     companies[name].appointments = [];
     await companies[name].save();
@@ -94,8 +93,8 @@ async function generateDemo() {
       const appointment = new Models.Appointment(company, customer);
       appointment.date = new Date();
       appointment.hour = getRandomIntInclusive(
-        config.appointmentsHoursFrom,
-        config.appointmentsHoursTo
+        company.hoursFrom,
+        company.hoursTo
       );
       await appointment.save();
     }

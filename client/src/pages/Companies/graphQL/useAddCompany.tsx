@@ -4,8 +4,20 @@ import { useMutation, gql } from "@apollo/client";
 import { CompanyData } from "./types";
 
 const ADD_COMPANY = gql`
-  mutation AddCompany($name: String!, $email: String!, $phone: String!) {
-    createCompany(name: $name, email: $email, phone: $phone) {
+  mutation AddCompany(
+    $name: String!
+    $email: String!
+    $phone: String!
+    $hoursFrom: Int!
+    $hoursTo: Int!
+  ) {
+    createCompany(
+      name: $name
+      email: $email
+      phone: $phone
+      hoursFrom: $hoursFrom
+      hoursTo: $hoursTo
+    ) {
       id
     }
   }

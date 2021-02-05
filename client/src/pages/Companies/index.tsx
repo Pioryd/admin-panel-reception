@@ -46,6 +46,8 @@ export default function Companies() {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [phone, setPhone] = React.useState("");
+  const [hoursFrom, setHoursFrom] = React.useState(1);
+  const [hoursTo, setHoursTo] = React.useState(1);
 
   const queryGetCompanies = useGetCompanies();
   const mutationAddCompany = useAddCompany();
@@ -57,7 +59,9 @@ export default function Companies() {
 
   const addCompany = async () => {
     try {
-      await mutationAddCompany.fetch({ variables: { name, email, phone } });
+      await mutationAddCompany.fetch({
+        variables: { name, email, phone, hoursFrom, hoursTo }
+      });
 
       if (mounted.current !== true) return;
 
@@ -118,7 +122,7 @@ export default function Companies() {
     );
 
   return (
-    <>
+    <Box>
       <SnackbarAlert
         severity="error"
         toggleOpen={mutationAddCompany.error != null}
@@ -158,6 +162,8 @@ export default function Companies() {
         onUpdateName={setName}
         onUpdateEmail={setEmail}
         onUpdatePhone={setPhone}
+        onUpdateHoursFrom={setHoursFrom}
+        onUpdateHoursTo={setHoursTo}
       />
 
       <>
@@ -197,6 +203,6 @@ export default function Companies() {
           onChange={(event, page) => queryGetCompanies.refetch({ page })}
         />
       </>
-    </>
+    </Box>
   );
 }

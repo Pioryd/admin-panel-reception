@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const pad = (hour: number | undefined) => ("0" + hour).substr(-2);
+
 export default function Table(props: {
   rows: CompanyData[];
   onRemove: (id: number) => void;
@@ -41,6 +43,7 @@ export default function Table(props: {
             <TableCell align="left">Name</TableCell>
             <TableCell align="left">Email</TableCell>
             <TableCell align="left">Phone</TableCell>
+            <TableCell align="left">Hours</TableCell>
             <TableCell align="left">Create date</TableCell>
             <TableCell />
           </TableRow>
@@ -54,6 +57,9 @@ export default function Table(props: {
               <TableCell align="left">{row.name}</TableCell>
               <TableCell align="left">{row.email}</TableCell>
               <TableCell align="left">{row.phone}</TableCell>
+              <TableCell align="left">
+                {pad(row.hoursFrom)}-{pad(row.hoursTo)}
+              </TableCell>
               <TableCell align="left">
                 {new Date(Number(row.created)).toLocaleDateString("en-US")}
               </TableCell>

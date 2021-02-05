@@ -3,5 +3,7 @@ export interface CompanyData {
   name?: string;
   email?: string;
   phone?: string;
+  hoursFrom?: number;
+  hoursTo?: number;
   created?: string;
 }

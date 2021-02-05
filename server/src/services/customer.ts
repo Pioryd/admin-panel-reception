@@ -16,9 +16,7 @@ export async function get(data?: {
 }): Promise<CustomerPaginatedResponse> {
   const SEARCH_LIMIT = Number(process.env.SEARCH_LIMIT);
 
-  const totalItems = await Models.Customer.createQueryBuilder("log_entry")
-    .select("DISTINCT()")
-    .getCount();
+  const totalItems = await Models.Customer.count();
   const totalPages = Math.max(Math.ceil(totalItems / SEARCH_LIMIT), 1);
 
   let page = 1;
@@ -27,6 +25,7 @@ export async function get(data?: {
   const findOptions: FindManyOptions<Models.Customer> = {};
   findOptions.where = {};
   findOptions.take = SEARCH_LIMIT;
+  findOptions.order = { id: "ASC" };
 
   if (data != null) {
     if (data.id != null) findOptions.where.id = data.id;
@@ -43,7 +42,6 @@ export async function get(data?: {
 
   findOptions.skip = (page - 1) * SEARCH_LIMIT;
   findOptions.take = limit;
-  limit = Math.max(Math.min(SEARCH_LIMIT, limit), 1);
 
   return Object.assign(new CustomerPaginatedResponse(), {
     items: await Models.Customer.find(findOptions),
