@@ -3,7 +3,7 @@
   "host": "localhost",
   "username": "postgres",
   "password": "admin",
-  "database": "registration",
+  "database": "reception",
   "logging": false,
   "entities": ["./src/models/index.ts"]
 }

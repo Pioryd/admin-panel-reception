@@ -7,8 +7,12 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle
+  DialogTitle,
+  FormLabel,
+  Box
 } from "@material-ui/core";
+
+import * as Validate from "../../util/validate";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,14 +26,36 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function AddCompanyDialog(props: {
   open: boolean;
   onClose: () => void;
-  onAdd: () => void;
-  onUpdateName: (value: string) => void;
-  onUpdateEmail: (value: string) => void;
-  onUpdatePhone: (value: string) => void;
-  onUpdateHoursFrom: (value: number) => void;
-  onUpdateHoursTo: (value: number) => void;
+  onAdd: (data: {
+    name: string;
+    email: string;
+    phone: string;
+    hoursFrom: number;
+    hoursTo: number;
+  }) => void;
 }) {
   const classes = useStyles();
+
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [hoursFrom, setHoursFrom] = React.useState(1);
+  const [hoursTo, setHoursTo] = React.useState(1);
+
+  const [error, setError] = React.useState("");
+
+  const add = () => {
+    try {
+      Validate.company({ name, email, phone, hoursFrom, hoursTo });
+
+      props.onAdd({ name, email, phone, hoursFrom, hoursTo });
+      props.onClose();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  React.useEffect(() => setError(""), [name, email, phone, hoursFrom, hoursTo]);
 
   return (
     <Dialog
@@ -47,7 +73,8 @@ export default function AddCompanyDialog(props: {
           label="Name"
           type="text"
           fullWidth
-          onChange={(e) => props.onUpdateName(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <TextField
           className={classes.textField}
@@ -57,7 +84,8 @@ export default function AddCompanyDialog(props: {
           label="Email"
           type="email"
           fullWidth
-          onChange={(e) => props.onUpdateEmail(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           className={classes.textField}
@@ -67,7 +95,8 @@ export default function AddCompanyDialog(props: {
           label="Phone"
           type="number"
           fullWidth
-          onChange={(e) => props.onUpdatePhone(e.target.value)}
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
         />
         <TextField
           className={classes.textField}
@@ -77,7 +106,8 @@ export default function AddCompanyDialog(props: {
           label="Hours from"
           type="number"
           fullWidth
-          onChange={(e) => props.onUpdateHoursFrom(Number(e.target.value))}
+          value={hoursFrom}
+          onChange={(e) => setHoursFrom(Number(e.target.value))}
         />
         <TextField
           className={classes.textField}
@@ -87,20 +117,18 @@ export default function AddCompanyDialog(props: {
           label="Hours to"
           type="number"
           fullWidth
-          onChange={(e) => props.onUpdateHoursTo(Number(e.target.value))}
+          value={hoursTo}
+          onChange={(e) => setHoursTo(Number(e.target.value))}
         />
+        <Box textAlign="center">
+          <FormLabel error>{error}</FormLabel>
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose} color="primary">
           Cancel
         </Button>
-        <Button
-          onClick={() => {
-            props.onAdd();
-            props.onClose();
-          }}
-          color="primary"
-        >
+        <Button onClick={add} color="primary">
           Add
         </Button>
       </DialogActions>

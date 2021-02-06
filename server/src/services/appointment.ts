@@ -1,6 +1,8 @@
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { FindManyOptions } from "typeorm/find-options/FindManyOptions";
 
+import * as Validate from "../util/validate";
+
 import { AppointmentPaginatedResponse } from "../types/paginated-response";
 
 import * as Models from "../models";
@@ -55,6 +57,8 @@ export async function create(data: {
   date: string;
   hour: number;
 }): Promise<Models.Appointment> {
+  Validate.appointment(data);
+
   const company = await Models.Company.findOne({
     where: { id: data.companyId }
   });
@@ -68,6 +72,26 @@ export async function create(data: {
   if (data.hour < company.hoursFrom || data.hour > company.hoursTo)
     throw new Error("Hours is not allowed by company.");
 
+  if (
+    !(
+      company.hoursFrom < company.hoursTo &&
+      data.hour >= company.hoursFrom &&
+      data.hour <= company.hoursTo
+    ) &&
+    !(
+      company.hoursFrom > company.hoursTo &&
+      (data.hour >= company.hoursFrom || data.hour <= company.hoursTo)
+    ) &&
+    !(
+      company.hoursFrom === company.hoursTo &&
+      data.hour === company.hoursFrom &&
+      data.hour === company.hoursTo
+    )
+  ) {
+    throw new Error(
+      `Hour must be in range [${company.hoursFrom}-${company.hoursTo}]`
+    );
+  }
   const appointment = await Models.Appointment.create({
     company,
     customer,

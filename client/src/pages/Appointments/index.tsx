@@ -43,11 +43,6 @@ export default function Appointments() {
 
   const mounted = React.useRef(false);
 
-  const [customerId, setCustomerId] = React.useState(-1);
-  const [companyId, setCompanyId] = React.useState(-1);
-  const [date, setDate] = React.useState("");
-  const [hour, setHour] = React.useState(1);
-
   const queryGetAppointments = useGetAppointments();
   const mutationAddAppointment = useAddAppointment();
   const mutationRemoveAppointment = useRemoveAppointment();
@@ -65,7 +60,14 @@ export default function Appointments() {
     }
   };
 
-  const addAppointment = async () => {
+  const addAppointment = async (data: {
+    customerId: number;
+    companyId: number;
+    date: string;
+    hour: number;
+  }) => {
+    const { customerId, companyId, date, hour } = data;
+
     try {
       await mutationAddAppointment.fetch({
         variables: { customerId, companyId, date, hour }
@@ -170,10 +172,6 @@ export default function Appointments() {
         open={dialogAddAppointmentOpened}
         onClose={() => setDialogAddAppointmentOpened(false)}
         onAdd={addAppointment}
-        onUpdateCustomerId={setCustomerId}
-        onUpdateCompanyId={setCompanyId}
-        onUpdateDate={setDate}
-        onUpdateHour={setHour}
       />
 
       <>

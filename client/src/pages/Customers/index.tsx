@@ -43,10 +43,6 @@ export default function Customers() {
 
   const mounted = React.useRef(false);
 
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-
   const queryGetCustomers = useGetCustomers();
   const mutationAddCustomer = useAddCustomer();
   const mutationRemoveCustomer = useRemoveCustomer();
@@ -63,8 +59,13 @@ export default function Customers() {
     }
   };
 
-  const addCustomer = async () => {
+  const addCustomer = async (data: {
+    name: string;
+    email: string;
+    phone: string;
+  }) => {
     try {
+      const { name, email, phone } = data;
       await mutationAddCustomer.fetch({ variables: { name, email, phone } });
 
       if (mounted.current !== true) return;
@@ -166,9 +167,6 @@ export default function Customers() {
         open={dialogAddCustomerOpened}
         onClose={() => setDialogAddCustomerOpened(false)}
         onAdd={addCustomer}
-        onUpdateName={setName}
-        onUpdateEmail={setEmail}
-        onUpdatePhone={setPhone}
       />
 
       <>

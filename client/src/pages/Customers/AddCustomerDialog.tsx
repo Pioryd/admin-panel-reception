@@ -7,8 +7,12 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle
+  DialogTitle,
+  FormLabel,
+  Box
 } from "@material-ui/core";
+
+import * as Validate from "../../util/validate";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,12 +26,28 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function AddCustomerDialog(props: {
   open: boolean;
   onClose: () => void;
-  onAdd: () => void;
-  onUpdateName: (value: string) => void;
-  onUpdateEmail: (value: string) => void;
-  onUpdatePhone: (value: string) => void;
+  onAdd: (data: { name: string; email: string; phone: string }) => void;
 }) {
   const classes = useStyles();
+
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+
+  const [error, setError] = React.useState("");
+
+  const add = () => {
+    try {
+      Validate.customer({ name, email, phone });
+
+      props.onAdd({ name, email, phone });
+      props.onClose();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  React.useEffect(() => setError(""), [name, email, phone]);
 
   return (
     <Dialog
@@ -45,7 +65,8 @@ export default function AddCustomerDialog(props: {
           label="Name"
           type="text"
           fullWidth
-          onChange={(e) => props.onUpdateName(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <TextField
           className={classes.textField}
@@ -55,7 +76,8 @@ export default function AddCustomerDialog(props: {
           label="Email"
           type="email"
           fullWidth
-          onChange={(e) => props.onUpdateEmail(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           className={classes.textField}
@@ -65,20 +87,18 @@ export default function AddCustomerDialog(props: {
           label="Phone"
           type="number"
           fullWidth
-          onChange={(e) => props.onUpdatePhone(e.target.value)}
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
         />
+        <Box textAlign="center">
+          <FormLabel error>{error}</FormLabel>
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose} color="primary">
           Cancel
         </Button>
-        <Button
-          onClick={() => {
-            props.onAdd();
-            props.onClose();
-          }}
-          color="primary"
-        >
+        <Button onClick={add} color="primary">
           Add
         </Button>
       </DialogActions>

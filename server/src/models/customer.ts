@@ -3,7 +3,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  Unique,
   PrimaryGeneratedColumn,
   OneToMany
 } from "typeorm";
@@ -11,7 +10,6 @@ import {
 import { Appointment } from "./appointment";
 
 @Entity()
-@Unique(["name"])
 @ObjectType()
 export class Customer extends BaseEntity {
   @Field(() => ID)

@@ -9,10 +9,14 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
-  CircularProgress
+  FormLabel,
+  CircularProgress,
+  Box
 } from "@material-ui/core";
 
 import useGetCompany from "./graphQL/useGetCompany";
+
+import * as Validate from "../../util/validate";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,43 +30,98 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function AddCustomerDialog(props: {
   open: boolean;
   onClose: () => void;
-  onAdd: () => void;
-  onUpdateCustomerId: (value: number) => void;
-  onUpdateCompanyId: (value: number) => void;
-  onUpdateDate: (value: string) => void;
-  onUpdateHour: (value: number) => void;
+  onAdd: (data: {
+    customerId: number;
+    companyId: number;
+    date: string;
+    hour: number;
+  }) => void;
 }) {
   const classes = useStyles();
 
-  const [companyInfo, setCompanyInfo] = React.useState("");
+  const [customerId, setCustomerId] = React.useState(0);
+  const [companyId, setCompanyId] = React.useState(0);
+  const [date, setDate] = React.useState(
+    new Date().toLocaleDateString("fr-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    })
+  );
+  const [hour, setHour] = React.useState(1);
+
+  const [hoursInfo, setHoursInfo] = React.useState("");
   const [disabledAdd, setDisabledAdd] = React.useState(false);
-  const { error, loading, refetch, response } = useGetCompany();
+
+  const [error, setError] = React.useState("");
+
+  const queryGetCompany = useGetCompany();
+
+  const add = () => {
+    try {
+      Validate.appointment({ date, hour });
+
+      const { hoursFrom, hoursTo } = queryGetCompany.response;
+
+      if (hoursFrom == null || hoursTo == null)
+        throw new Error("Invalid received company hours data.");
+
+      if (
+        !(hoursFrom < hoursTo && hour >= hoursFrom && hour <= hoursTo) &&
+        !(hoursFrom > hoursTo && (hour >= hoursFrom || hour <= hoursTo)) &&
+        !(hoursFrom === hoursTo && hour === hoursFrom && hour === hoursTo)
+      ) {
+        setDisabledAdd(true);
+        throw new Error(`Hour must be in range [${hoursFrom}-${hoursTo}]`);
+      }
+
+      props.onAdd({ customerId, companyId, date, hour });
+      props.onClose();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   const onCompanyIdUpdate = async (value: number) => {
-    props.onUpdateCompanyId(value);
-
+    setCompanyId(value);
     try {
-      await refetch({ id: value });
+      await queryGetCompany.refetch({ id: value });
     } catch (err) {
       console.log(err);
     }
   };
 
   React.useEffect(() => {
-    if (loading) {
-      setCompanyInfo("Loading hours...");
+    setError("");
+    setHoursInfo("");
+
+    if (queryGetCompany.loading) {
+      setHoursInfo("Loading hours...");
       setDisabledAdd(true);
-    } else if (error != null) {
-      setCompanyInfo("Unable to find company with given id.");
+    } else if (queryGetCompany.error != null) {
+      setError("Unable to find company with given id.");
       setDisabledAdd(true);
-    } else if (response && response.hoursFrom && response.hoursTo) {
-      setCompanyInfo(`Hours ${response.hoursFrom}-${response.hoursTo}`);
+    } else if (
+      queryGetCompany.response &&
+      queryGetCompany.response.hoursFrom &&
+      queryGetCompany.response.hoursTo
+    ) {
+      setHoursInfo(
+        `Hours ${queryGetCompany.response.hoursFrom}-${queryGetCompany.response.hoursTo}`
+      );
       setDisabledAdd(false);
     } else {
-      setCompanyInfo("Set proper company id.");
+      setError("Wrong company id.");
       setDisabledAdd(true);
     }
-  }, [response, loading, error]);
+  }, [
+    queryGetCompany.response,
+    queryGetCompany.loading,
+    queryGetCompany.error,
+    hour
+  ]);
+
+  React.useEffect(() => setError(""), [customerId, companyId, date, hour]);
 
   return (
     <Dialog
@@ -70,7 +129,7 @@ export default function AddCustomerDialog(props: {
       onClose={props.onClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Add appointment</DialogTitle>
+      <DialogTitle id="form-dialog-title">Add appointment2</DialogTitle>
       <DialogContent>
         <TextField
           className={classes.textField}
@@ -80,7 +139,8 @@ export default function AddCustomerDialog(props: {
           label="Customer ID"
           type="text"
           fullWidth
-          onChange={(e) => props.onUpdateCustomerId(Number(e.target.value))}
+          value={customerId}
+          onChange={(e) => setCustomerId(Number(e.target.value))}
         />
         <TextField
           className={classes.textField}
@@ -90,20 +150,20 @@ export default function AddCustomerDialog(props: {
           label="Company ID"
           type="text"
           fullWidth
+          value={companyId}
           onChange={(e) => onCompanyIdUpdate(Number(e.target.value))}
         />
         <TextField
-          className={classes.textField}
-          autoFocus
-          margin="dense"
           id="date"
           label="Date"
-          type="text"
-          fullWidth
-          onChange={(e) => props.onUpdateDate(e.target.value)}
+          type="date"
+          InputLabelProps={{
+            shrink: true
+          }}
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
         />
         <TextField
-          disabled={disabledAdd}
           className={classes.textField}
           autoFocus
           margin="dense"
@@ -111,25 +171,22 @@ export default function AddCustomerDialog(props: {
           label="Hour"
           type="number"
           fullWidth
-          onChange={(e) => props.onUpdateHour(Number(e.target.value))}
+          value={hour}
+          onChange={(e) => setHour(Number(e.target.value))}
         />
         <Typography variant="subtitle1">
-          {companyInfo}
-          {loading && <CircularProgress size={15} />}
+          {hoursInfo}
+          {queryGetCompany.loading && <CircularProgress size={15} />}
         </Typography>
+        <Box textAlign="center">
+          <FormLabel error>{error}</FormLabel>
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose} color="primary">
           Cancel
         </Button>
-        <Button
-          disabled={disabledAdd}
-          onClick={() => {
-            props.onAdd();
-            props.onClose();
-          }}
-          color="primary"
-        >
+        <Button disabled={disabledAdd} onClick={add} color="primary">
           Add
         </Button>
       </DialogActions>

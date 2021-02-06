@@ -43,12 +43,6 @@ export default function Companies() {
 
   const mounted = React.useRef(false);
 
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [hoursFrom, setHoursFrom] = React.useState(1);
-  const [hoursTo, setHoursTo] = React.useState(1);
-
   const queryGetCompanies = useGetCompanies();
   const mutationAddCompany = useAddCompany();
   const mutationRemoveCompany = useRemoveCompany();
@@ -65,7 +59,15 @@ export default function Companies() {
     }
   };
 
-  const addCompany = async () => {
+  const addCompany = async (data: {
+    name: string;
+    email: string;
+    phone: string;
+    hoursFrom: number;
+    hoursTo: number;
+  }) => {
+    const { name, email, phone, hoursFrom, hoursTo } = data;
+
     try {
       await mutationAddCompany.fetch({
         variables: { name, email, phone, hoursFrom, hoursTo }
@@ -170,11 +172,6 @@ export default function Companies() {
         open={dialogAddCompanyOpened}
         onClose={() => setDialogAddCompanyOpened(false)}
         onAdd={addCompany}
-        onUpdateName={setName}
-        onUpdateEmail={setEmail}
-        onUpdatePhone={setPhone}
-        onUpdateHoursFrom={setHoursFrom}
-        onUpdateHoursTo={setHoursTo}
       />
 
       <>

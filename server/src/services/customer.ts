@@ -1,6 +1,8 @@
 import { FindManyOptions } from "typeorm/find-options/FindManyOptions";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 
+import * as Validate from "../util/validate";
+
 import { CustomerPaginatedResponse } from "../types/paginated-response";
 
 import * as Models from "../models";
@@ -56,6 +58,8 @@ export async function create(data: {
   email: string;
   phone: string;
 }): Promise<Models.Customer> {
+  Validate.customer(data);
+
   const customer = Models.Customer.create({ ...data, created: new Date() });
   await customer.save();
 
