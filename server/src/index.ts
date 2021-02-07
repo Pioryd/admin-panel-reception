@@ -39,6 +39,8 @@ const main = async () => {
     }))
   );
 
+  app.use((req, res, next) => res.status(404).send("API not found"));
+
   app.listen(process.env.PORT, () => {
     const port = process.env.PORT;
     const build = process.env.NODE_ENV;
