@@ -1,6 +1,6 @@
 # Reception (admin panel)
 
-## Live preview: [DEMO](https://localhost/)
+## Live preview: [DEMO](https://reception-304016.ew.r.appspot.com/)
 
 ## Build with
 
@@ -61,4 +61,5 @@ In server root directory create:
 PORT=3000
 GRAPHIQL=true
 SEARCH_LIMIT=10
+WEB_SERVER=false
 ```

@@ -39,6 +39,13 @@ const main = async () => {
     }))
   );
 
+  if (process.env.WEB_SERVER === "true") {
+    app.use(express.static(path.join(__dirname, "../..", "build")));
+    app.get("/*", (req, res) =>
+      res.sendFile(path.join(__dirname, "../..", "build", "index.html"))
+    );
+  }
+
   app.use((req, res, next) => res.status(404).send("API not found"));
 
   app.listen(process.env.PORT, () => {

@@ -54,6 +54,7 @@ export default function AddCustomerDialog(props: {
   const [disabledAdd, setDisabledAdd] = React.useState(false);
 
   const [error, setError] = React.useState("");
+  const [errorOfCompanyId, setErrorOfCompanyId] = React.useState("");
 
   const queryGetCompany = useGetCompany();
 
@@ -92,14 +93,14 @@ export default function AddCustomerDialog(props: {
   };
 
   React.useEffect(() => {
-    setError("");
+    setErrorOfCompanyId("");
     setHoursInfo("");
 
     if (queryGetCompany.loading) {
       setHoursInfo("Loading hours...");
       setDisabledAdd(true);
     } else if (queryGetCompany.error != null) {
-      setError("Unable to find company with given id.");
+      setErrorOfCompanyId("Unable to find company with given id.");
       setDisabledAdd(true);
     } else if (
       queryGetCompany.response &&
@@ -111,7 +112,7 @@ export default function AddCustomerDialog(props: {
       );
       setDisabledAdd(false);
     } else {
-      setError("Wrong company id.");
+      setErrorOfCompanyId("Wrong company id.");
       setDisabledAdd(true);
     }
   }, [
@@ -180,6 +181,9 @@ export default function AddCustomerDialog(props: {
         </Typography>
         <Box textAlign="center">
           <FormLabel error>{error}</FormLabel>
+        </Box>
+        <Box textAlign="center">
+          <FormLabel error>{errorOfCompanyId}</FormLabel>
         </Box>
       </DialogContent>
       <DialogActions>

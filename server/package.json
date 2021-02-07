@@ -1,8 +1,8 @@
 {
-  "name": "registration",
+  "name": "reception",
   "version": "1.0.0",
-  "main": "src/index.ts",
-  "repository": "https://github.com/Pioryd/registration.git",
+  "main": "dist/src/index.js",
+  "repository": "https://github.com/Pioryd/reception.git",
   "author": "Piotr Rydwański <pioryd123@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -11,7 +11,7 @@
     "dev": "set NODE_ENV=development&&nodemon src/index.ts",
     "dev:generate": "set NODE_ENV=development&&nodemon --exec \"npm run generate-demo&&ts-node src/index.ts\"",
     "build": "set NODE_ENV=production&&tsc --project .",
-    "start": "set NODE_ENV=production&&npm run build&&ts-node dist/index.js",
+    "start": "set NODE_ENV=production&&node dist/src/index.js",
     "generate-demo": "set NODE_ENV=development&&ts-node scripts/generate-demo"
   },
   "dependencies": {
