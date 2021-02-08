@@ -69,6 +69,8 @@ WEB_SERVER=false
 # mongodb+srv://<USER>:<PASSWORD>@<URL>/<DB_NAME>
 DB_HOST=<MONGODB URL WITH DB NAME>
 DB_SSL=<true if use atlas, false if localhost>
-DB_ENTITIES=./src/models/index.ts # development/test
-DB_ENTITIES=./dist/src/models/index.js # production
+# development/test
+DB_ENTITIES=./src/models/index.ts
+# production
+DB_ENTITIES=./dist/src/models/index.js
 ```

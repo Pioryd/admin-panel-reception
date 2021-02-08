@@ -1,3 +1,5 @@
+import path from "path";
+import dotenv from "dotenv";
 import { createConnection } from "typeorm";
 import * as Models from "../src/models";
 
@@ -46,7 +48,19 @@ function randomPhone() {
 }
 
 async function generateDemo() {
-  const connection = await createConnection();
+  dotenv.config();
+  dotenv.config({ path: path.join(`.env.${process.env.NODE_ENV}`) });
+
+  console.log(String(process.env.DB_ENTITIES));
+  const connection = await createConnection({
+    type: "mongodb",
+    url: String(process.env.DB_HOST),
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    ssl: process.env.DB_SSL === "true",
+    entities: [String(process.env.DB_ENTITIES)]
+  });
+
   await connection.dropDatabase();
   await connection.synchronize();
 
