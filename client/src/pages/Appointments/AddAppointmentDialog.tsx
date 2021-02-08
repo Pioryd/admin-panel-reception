@@ -60,6 +60,8 @@ export default function AddCustomerDialog(props: {
 
   const add = () => {
     try {
+      setDisabledAdd(false);
+
       Validate.appointment({ date, hour });
 
       const { hoursFrom, hoursTo } = queryGetCompany.response;
@@ -95,6 +97,7 @@ export default function AddCustomerDialog(props: {
   React.useEffect(() => {
     setErrorOfCompanyId("");
     setHoursInfo("");
+    setDisabledAdd(false);
 
     if (queryGetCompany.loading) {
       setHoursInfo("Loading hours...");
@@ -122,7 +125,10 @@ export default function AddCustomerDialog(props: {
     hour
   ]);
 
-  React.useEffect(() => setError(""), [customerId, companyId, date, hour]);
+  React.useEffect(() => {
+    setDisabledAdd(false);
+    setError("");
+  }, [customerId, companyId, date, hour]);
 
   return (
     <Dialog

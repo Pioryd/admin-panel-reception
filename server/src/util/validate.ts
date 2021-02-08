@@ -56,12 +56,7 @@ export function appointment(data: { hour: number; date: string }) {
     throw new Error("Hour is not in range [1-24],");
   }
 
-  if (
-    !validator.isDate(date, { format: "D/M/YYYY" }) &&
-    !validator.isDate(date, { format: "DD/MM/YYYY" }) &&
-    !validator.isDate(date, { format: "D/MM/YYYY" }) &&
-    !validator.isDate(date, { format: "DD/M/YYYY" })
-  ) {
+  if (date.length < 4) {
     throw new Error("Date is wrong.");
   }
 }
