@@ -10,9 +10,9 @@ export class AppointmentResolver {
   @Query(() => AppointmentPaginatedResponse)
   async getAppointments(
     @Arg("customerName", () => String, { nullable: true }) customerName: string,
-    @Arg("customerId", () => Int, { nullable: true }) customerId: number,
+    @Arg("customerId", () => String, { nullable: true }) customerId: string,
     @Arg("companyName", () => String, { nullable: true }) companyName: string,
-    @Arg("companyId", () => Int, { nullable: true }) companyId: number,
+    @Arg("companyId", () => String, { nullable: true }) companyId: string,
     @Arg("date", () => String, { nullable: true }) date: string,
     @Arg("hour", () => Int, { nullable: true }) hour: number,
     @Arg("limit", () => Int, { nullable: true }) limit: number,
@@ -39,8 +39,8 @@ export class AppointmentResolver {
       ).items;
 
     return await Services.Appointment.get({
-      customer: customers[0],
-      company: companies[0],
+      customerId,
+      companyId,
       date,
       hour,
       limit,
@@ -55,8 +55,8 @@ export class AppointmentResolver {
 
   @Mutation(() => Models.Appointment)
   async createAppointment(
-    @Arg("companyId", () => Int) companyId: number,
-    @Arg("customerId", () => Int) customerId: number,
+    @Arg("companyId", () => String) companyId: string,
+    @Arg("customerId", () => String) customerId: string,
     @Arg("date", () => String) date: string,
     @Arg("hour", () => Int) hour: number
   ): Promise<Models.Appointment> {
@@ -69,14 +69,14 @@ export class AppointmentResolver {
   }
 
   @Mutation(() => Boolean)
-  async removeAppointment(@Arg("id", () => Int) id: number) {
+  async removeAppointment(@Arg("id", () => String) id: string) {
     await Services.Appointment.remove({ id });
     return true;
   }
 
   @Mutation(() => Boolean)
   async updateAppointment(
-    @Arg("id", () => Int) id: number,
+    @Arg("id", () => String) id: string,
     @Arg("date", () => String, { nullable: true }) date: string,
     @Arg("hour", () => Int, { nullable: true }) hour: number
   ) {

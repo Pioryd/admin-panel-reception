@@ -1,5 +1,5 @@
 export interface CompanyData {
-  id?: number;
+  id?: string;
   name?: string;
   email?: string;
   phone?: string;
@@ -7,7 +7,7 @@ export interface CompanyData {
 }
 
 export interface CustomerData {
-  id?: number;
+  id?: string;
   name?: string;
   email?: string;
   phone?: string;
@@ -15,9 +15,9 @@ export interface CustomerData {
 }
 
 export interface AppointmentData {
-  id?: number;
+  id?: string;
   date?: string;
   hour?: number;
-  company?: CompanyData;
-  customer?: CustomerData;
+  companyId?: string;
+  customerId?: string;
 }

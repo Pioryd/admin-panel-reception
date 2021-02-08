@@ -31,16 +31,16 @@ export default function AddCustomerDialog(props: {
   open: boolean;
   onClose: () => void;
   onAdd: (data: {
-    customerId: number;
-    companyId: number;
+    customerId: string;
+    companyId: string;
     date: string;
     hour: number;
   }) => void;
 }) {
   const classes = useStyles();
 
-  const [customerId, setCustomerId] = React.useState(0);
-  const [companyId, setCompanyId] = React.useState(0);
+  const [customerId, setCustomerId] = React.useState("");
+  const [companyId, setCompanyId] = React.useState("");
   const [date, setDate] = React.useState(
     new Date().toLocaleDateString("fr-CA", {
       year: "numeric",
@@ -82,7 +82,7 @@ export default function AddCustomerDialog(props: {
     }
   };
 
-  const onCompanyIdUpdate = async (value: number) => {
+  const onCompanyIdUpdate = async (value: string) => {
     setCompanyId(value);
     try {
       await queryGetCompany.refetch({ id: value });
@@ -140,7 +140,7 @@ export default function AddCustomerDialog(props: {
           type="text"
           fullWidth
           value={customerId}
-          onChange={(e) => setCustomerId(Number(e.target.value))}
+          onChange={(e) => setCustomerId(e.target.value)}
         />
         <TextField
           className={classes.textField}
@@ -151,7 +151,7 @@ export default function AddCustomerDialog(props: {
           type="text"
           fullWidth
           value={companyId}
-          onChange={(e) => onCompanyIdUpdate(Number(e.target.value))}
+          onChange={(e) => onCompanyIdUpdate(e.target.value)}
         />
         <TextField
           id="date"

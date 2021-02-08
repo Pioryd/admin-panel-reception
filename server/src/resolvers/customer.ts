@@ -9,7 +9,7 @@ import * as Services from "../services";
 export class CustomerResolver {
   @Query(() => CustomerPaginatedResponse)
   async getCustomers(
-    @Arg("id", () => Int, { nullable: true }) id: number,
+    @Arg("id", () => String, { nullable: true }) id: string,
     @Arg("name", () => String, { nullable: true }) name: string,
     @Arg("email", () => String, { nullable: true }) email: string,
     @Arg("phone", () => String, { nullable: true }) phone: string,
@@ -38,14 +38,14 @@ export class CustomerResolver {
   }
 
   @Mutation(() => Boolean)
-  async removeCustomer(@Arg("id", () => Int) id: number) {
+  async removeCustomer(@Arg("id", () => String) id: string) {
     await Services.Customer.remove({ id });
     return true;
   }
 
   @Mutation(() => Boolean)
   async updateCustomer(
-    @Arg("id", () => Int) id: number,
+    @Arg("id", () => String) id: string,
     @Arg("name", () => String) name: string,
     @Arg("email", () => String) email: string,
     @Arg("phone", () => String) phone: string

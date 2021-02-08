@@ -9,7 +9,7 @@ import * as Services from "../services";
 export class CompanyResolver {
   @Query(() => CompanyPaginatedResponse)
   async getCompanies(
-    @Arg("id", () => Int, { nullable: true }) id: number,
+    @Arg("id", () => String, { nullable: true }) id: string,
     @Arg("name", () => String, { nullable: true }) name: string,
     @Arg("email", () => String, { nullable: true }) email: string,
     @Arg("phone", () => String, { nullable: true }) phone: string,
@@ -50,7 +50,7 @@ export class CompanyResolver {
   }
 
   @Mutation(() => Boolean)
-  async removeCompany(@Arg("id", () => Int) id: number) {
+  async removeCompany(@Arg("id", () => String) id: string) {
     await Services.Company.remove({ id });
 
     return true;
@@ -58,7 +58,7 @@ export class CompanyResolver {
 
   @Mutation(() => Boolean)
   async updateCompany(
-    @Arg("id", () => Int) id: number,
+    @Arg("id", () => String) id: string,
     @Arg("name", () => String) name: string,
     @Arg("email", () => String) email: string,
     @Arg("phone", () => String) phone: string,

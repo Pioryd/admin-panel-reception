@@ -1,22 +1,12 @@
-import { Field, ObjectType, Int, ID } from "type-graphql";
-import {
-  BaseEntity,
-  Entity,
-  JoinColumn,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne
-} from "typeorm";
-
-import { Company } from "./company";
-import { Customer } from "./customer";
+import { Field, ObjectType, Int } from "type-graphql";
+import { BaseEntity, Entity, Column, ObjectIdColumn, ObjectID } from "typeorm";
 
 @Entity()
 @ObjectType()
 export class Appointment extends BaseEntity {
-  @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  id: number | null = null;
+  @Field(() => String)
+  @ObjectIdColumn()
+  id: ObjectID | undefined;
 
   @Field(() => String)
   @Column()
@@ -26,25 +16,17 @@ export class Appointment extends BaseEntity {
   @Column()
   hour: number = 0;
 
-  @Field(() => Company)
-  @ManyToOne(() => Company, (company) => company.appointments, {
-    primary: true,
-    eager: true
-  })
-  @JoinColumn()
-  company: Company;
+  @Field(() => String)
+  @Column()
+  companyId: string = "";
 
-  @Field(() => Customer)
-  @ManyToOne(() => Customer, (customer) => customer.appointments, {
-    primary: true,
-    eager: true
-  })
-  @JoinColumn()
-  customer: Customer;
+  @Field(() => String)
+  @Column()
+  customerId: string = "";
 
-  constructor(company: Company, customer: Customer) {
+  constructor(companyId: string, customerId: string) {
     super();
-    this.company = company;
-    this.customer = customer;
+    this.companyId = companyId;
+    this.customerId = customerId;
   }
 }

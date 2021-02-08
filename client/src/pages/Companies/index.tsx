@@ -83,9 +83,9 @@ export default function Companies() {
     }
   };
 
-  const removeCompany = async (id: number) => {
+  const removeCompany = async (id: string) => {
     try {
-      await mutationRemoveCompany.fetch({ variables: { id: Number(id) } });
+      await mutationRemoveCompany.fetch({ variables: { id } });
 
       if (mounted.current !== true) return;
 
