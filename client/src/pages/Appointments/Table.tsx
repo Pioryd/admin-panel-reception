@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Table(props: {
   rows: AppointmentData[];
-  onRemove: (id: number) => void;
+  onRemove: (id: string) => void;
 }) {
   const classes = useStyles();
 
@@ -38,8 +38,8 @@ export default function Table(props: {
         <TableHead>
           <TableRow className={classes.tableRow}>
             <TableCell>ID</TableCell>
-            <TableCell align="left">Customer</TableCell>
-            <TableCell align="left">Company</TableCell>
+            <TableCell align="left">Customer ID</TableCell>
+            <TableCell align="left">Company ID</TableCell>
             <TableCell align="left">Date</TableCell>
             <TableCell align="left">Hour</TableCell>
             <TableCell />
@@ -51,12 +51,8 @@ export default function Table(props: {
               <TableCell component="th" scope="row">
                 {row.id}
               </TableCell>
-              <TableCell align="left">
-                {row.customer && row.customer.name}
-              </TableCell>
-              <TableCell align="left">
-                {row.company && row.company.name}
-              </TableCell>
+              <TableCell align="left">{row.customerId}</TableCell>
+              <TableCell align="left">{row.companyId}</TableCell>
               <TableCell align="left">
                 {new Date(Number(row.date)).toLocaleDateString("en-US")}
               </TableCell>
@@ -65,7 +61,7 @@ export default function Table(props: {
                 <Button
                   color="primary"
                   startIcon={<DeleteIcon />}
-                  onClick={() => props.onRemove(Number(row.id))}
+                  onClick={() => props.onRemove(row.id || "")}
                 >
                   Remove
                 </Button>

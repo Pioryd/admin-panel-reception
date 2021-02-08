@@ -1,20 +1,12 @@
-import { Field, ID, ObjectType } from "type-graphql";
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  OneToMany
-} from "typeorm";
-
-import { Appointment } from "./appointment";
+import { Field, ObjectType } from "type-graphql";
+import { BaseEntity, Column, Entity, ObjectIdColumn, ObjectID } from "typeorm";
 
 @Entity()
 @ObjectType()
 export class Customer extends BaseEntity {
-  @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  id: number | null = null;
+  @Field(() => String)
+  @ObjectIdColumn()
+  id: ObjectID | undefined;
 
   @Field(() => String)
   @Column()
@@ -31,8 +23,4 @@ export class Customer extends BaseEntity {
   @Field(() => String)
   @Column()
   created: Date = new Date();
-
-  @Field(() => [Appointment])
-  @OneToMany(() => Appointment, (appointment) => appointment.customer)
-  appointments!: Appointment[];
 }

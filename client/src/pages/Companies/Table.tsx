@@ -30,7 +30,7 @@ const pad = (hour: number | undefined) => ("0" + hour).substr(-2);
 
 export default function Table(props: {
   rows: CompanyData[];
-  onRemove: (id: number) => void;
+  onRemove: (id: string) => void;
 }) {
   const classes = useStyles();
 
@@ -67,7 +67,7 @@ export default function Table(props: {
                 <Button
                   color="primary"
                   startIcon={<DeleteIcon />}
-                  onClick={() => props.onRemove(Number(row.id))}
+                  onClick={() => props.onRemove(row.id || "")}
                 >
                   Remove
                 </Button>

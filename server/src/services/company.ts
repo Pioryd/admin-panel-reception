@@ -1,5 +1,7 @@
 import { FindManyOptions } from "typeorm/find-options/FindManyOptions";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
+import { getManager } from "typeorm";
+import { ObjectId } from "mongodb";
 
 import * as Validate from "../util/validate";
 
@@ -8,7 +10,7 @@ import { CompanyPaginatedResponse } from "../types/paginated-response";
 import * as Models from "../models";
 
 export async function get(data?: {
-  id?: number;
+  id?: string;
   name?: string;
   email?: string;
   phone?: string;
@@ -27,13 +29,13 @@ export async function get(data?: {
   let page = 1;
   let limit = SEARCH_LIMIT;
 
-  const findOptions: FindManyOptions<Models.Company> = {};
+  const findOptions: FindManyOptions<Models.Company | any> = {};
   findOptions.where = {};
   findOptions.take = SEARCH_LIMIT;
-  findOptions.order = { id: "ASC" };
+  findOptions.order = { created: "ASC" };
 
   if (data != null) {
-    if (data.id != null) findOptions.where.id = data.id;
+    if (data.id != null) findOptions.where._id = new ObjectId(data.id);
     if (data.name != null) findOptions.where.name = data.name;
     if (data.email != null) findOptions.where.email = data.email;
     if (data.phone != null) findOptions.where.phone = data.phone;
@@ -73,14 +75,13 @@ export async function create(data: {
   return company;
 }
 
-export async function remove(data: { id: number }) {
-  const company = await Models.Company.findOne({ id: data.id });
-  await Models.Appointment.delete({ company });
-  await Models.Company.delete({ id: data.id });
+export async function remove(data: { id: string }) {
+  await Models.Appointment.delete({ companyId: data.id });
+  await Models.Company.delete({ id: new ObjectId(data.id) });
 }
 
 export async function update(data: {
-  id: number;
+  id: string;
   name?: string;
   email?: string;
   phone?: string;

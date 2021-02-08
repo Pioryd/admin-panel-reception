@@ -4,7 +4,7 @@ import { useMutation, gql } from "@apollo/client";
 import { AppointmentData } from "./types";
 
 const REMOVE_APPOINTMENT = gql`
-  mutation RemoveAppointment($id: Int!) {
+  mutation RemoveAppointment($id: String!) {
     removeAppointment(id: $id)
   }
 `;

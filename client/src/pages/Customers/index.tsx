@@ -78,9 +78,9 @@ export default function Customers() {
     }
   };
 
-  const removeCustomer = async (id: number) => {
+  const removeCustomer = async (id: string) => {
     try {
-      await mutationRemoveCustomer.fetch({ variables: { id: Number(id) } });
+      await mutationRemoveCustomer.fetch({ variables: { id } });
 
       if (mounted.current !== true) return;
 

@@ -61,8 +61,8 @@ export default function Appointments() {
   };
 
   const addAppointment = async (data: {
-    customerId: number;
-    companyId: number;
+    customerId: string;
+    companyId: string;
     date: string;
     hour: number;
   }) => {
@@ -83,9 +83,9 @@ export default function Appointments() {
     }
   };
 
-  const removeAppointment = async (id: number) => {
+  const removeAppointment = async (id: string) => {
     try {
-      await mutationRemoveAppointment.fetch({ variables: { id: Number(id) } });
+      await mutationRemoveAppointment.fetch({ variables: { id } });
 
       if (mounted.current !== true) return;
 

@@ -6,7 +6,6 @@ import cors from "cors";
 import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-
 import {
   CustomerResolver,
   CompanyResolver,
@@ -17,7 +16,14 @@ const main = async () => {
   dotenv.config();
   dotenv.config({ path: path.join(`.env.${process.env.NODE_ENV}`) });
 
-  const connection = await createConnection();
+  const connection = await createConnection({
+    type: "mongodb",
+    url: String(process.env.DB_HOST),
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    ssl: process.env.DB_SSL === "true",
+    entities: [String(process.env.DB_ENTITIES)]
+  });
   await connection.synchronize();
 
   const schema = await buildSchema({

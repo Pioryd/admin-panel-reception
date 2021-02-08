@@ -15,7 +15,7 @@ export interface Data {
 }
 
 export interface Vars {
-  id?: number;
+  id?: string;
   name?: string;
   limit?: number;
   page?: number;
@@ -28,12 +28,8 @@ const GET_APPOINTMENTS = gql`
         id
         date
         hour
-        company {
-          name
-        }
-        customer {
-          name
-        }
+        companyId
+        customerId
       }
       currentPage
       totalPages

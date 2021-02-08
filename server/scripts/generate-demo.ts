@@ -58,7 +58,6 @@ async function generateDemo() {
     customers[name].email = randomEmail();
     customers[name].phone = randomPhone();
     customers[name].created = new Date();
-    customers[name].appointments = [];
     await customers[name].save();
   }
 
@@ -72,7 +71,6 @@ async function generateDemo() {
     companies[name].hoursFrom = getRandomIntInclusive(1, 12);
     companies[name].hoursTo = getRandomIntInclusive(13, 24);
     companies[name].created = new Date();
-    companies[name].appointments = [];
     await companies[name].save();
   }
 
@@ -89,8 +87,13 @@ async function generateDemo() {
             getRandomIntInclusive(0, config.companiesCount - 1)
           ]
         ];
+      if (company.id == null || customer.id == null)
+        throw new Error("Undefined id");
 
-      const appointment = new Models.Appointment(company, customer);
+      const appointment = new Models.Appointment(
+        company.id.toHexString(),
+        customer.id.toHexString()
+      );
       appointment.date = new Date();
       appointment.hour = getRandomIntInclusive(
         company.hoursFrom,

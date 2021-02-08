@@ -12,11 +12,11 @@ export interface Data {
 }
 
 export interface Vars {
-  id?: number;
+  id?: string;
 }
 
 const GET_COMPANY = gql`
-  query GetCompany($id: Int!) {
+  query GetCompany($id: String!) {
     getCompanies(limit: 1, id: $id) {
       items {
         hoursFrom

@@ -4,7 +4,7 @@ import { useMutation, gql } from "@apollo/client";
 import { CustomerData } from "./types";
 
 const REMOVE_CUSTOMER = gql`
-  mutation RemoveCustomer($id: Int!) {
+  mutation RemoveCustomer($id: String!) {
     removeCustomer(id: $id)
   }
 `;

@@ -1,5 +1,6 @@
 import { FindManyOptions } from "typeorm/find-options/FindManyOptions";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
+import { ObjectId } from "mongodb";
 
 import * as Validate from "../util/validate";
 
@@ -8,7 +9,7 @@ import { CustomerPaginatedResponse } from "../types/paginated-response";
 import * as Models from "../models";
 
 export async function get(data?: {
-  id?: number;
+  id?: string;
   name?: string;
   email?: string;
   phone?: string;
@@ -27,7 +28,7 @@ export async function get(data?: {
   const findOptions: FindManyOptions<Models.Customer> = {};
   findOptions.where = {};
   findOptions.take = SEARCH_LIMIT;
-  findOptions.order = { id: "ASC" };
+  findOptions.order = { created: "ASC" };
 
   if (data != null) {
     if (data.id != null) findOptions.where.id = data.id;
@@ -66,14 +67,13 @@ export async function create(data: {
   return customer;
 }
 
-export async function remove(data: { id: number }) {
-  const customer = await Models.Customer.findOne({ id: data.id });
-  await Models.Appointment.delete({ customer });
-  await Models.Customer.delete({ id: data.id });
+export async function remove(data: { id: string }) {
+  await Models.Appointment.delete({ customerId: data.id });
+  await Models.Customer.delete({ id: new ObjectId(data.id) });
 }
 
 export async function update(data: {
-  id: number;
+  id: string;
   name?: string;
   email?: string;
   phone?: string;

@@ -5,8 +5,8 @@ import { AppointmentData } from "./types";
 
 const ADD_APPOINTMENT = gql`
   mutation AddAppointment(
-    $customerId: Int!
-    $companyId: Int!
+    $customerId: String!
+    $companyId: String!
     $date: String!
     $hour: Int!
   ) {

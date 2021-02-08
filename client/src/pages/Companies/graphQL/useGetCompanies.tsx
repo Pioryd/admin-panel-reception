@@ -15,7 +15,7 @@ export interface Data {
 }
 
 export interface Vars {
-  id?: number;
+  id?: string;
   name?: string;
   limit?: number;
   page?: number;

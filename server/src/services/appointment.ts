@@ -1,5 +1,6 @@
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { FindManyOptions } from "typeorm/find-options/FindManyOptions";
+import { ObjectId } from "mongodb";
 
 import * as Validate from "../util/validate";
 
@@ -8,8 +9,8 @@ import { AppointmentPaginatedResponse } from "../types/paginated-response";
 import * as Models from "../models";
 
 export async function get(data?: {
-  customer?: Models.Customer;
-  company?: Models.Company;
+  customerId?: string;
+  companyId?: string;
   date?: string;
   hour?: number;
   limit?: number;
@@ -29,8 +30,8 @@ export async function get(data?: {
   findOptions.order = { id: "ASC" };
 
   if (data != null) {
-    if (data.customer != null) findOptions.where.customer = data.customer;
-    if (data.company != null) findOptions.where.company = data.company;
+    if (data.customerId != null) findOptions.where.customerId = data.customerId;
+    if (data.companyId != null) findOptions.where.companyId = data.companyId;
     if (data.date != null) findOptions.where.date = data.date;
     if (data.hour != null) findOptions.where.hour = data.hour;
     if (data.limit != null) limit = data.limit;
@@ -52,18 +53,18 @@ export async function get(data?: {
 }
 
 export async function create(data: {
-  companyId: number;
-  customerId: number;
+  companyId: string;
+  customerId: string;
   date: string;
   hour: number;
 }): Promise<Models.Appointment> {
   Validate.appointment(data);
 
   const company = await Models.Company.findOne({
-    where: { id: data.companyId }
+    where: { _id: new ObjectId(data.companyId) }
   });
   const customer = await Models.Customer.findOne({
-    where: { id: data.customerId }
+    where: { _id: new ObjectId(data.customerId) }
   });
 
   if (company == null) throw new Error("Company not found.");
@@ -92,9 +93,13 @@ export async function create(data: {
       `Hour must be in range [${company.hoursFrom}-${company.hoursTo}]`
     );
   }
+
+  if (company.id == null) throw new Error("Wrong company id.");
+  if (customer.id == null) throw new Error("Wrong customer id.");
+
   const appointment = await Models.Appointment.create({
-    company,
-    customer,
+    companyId: company.id.toHexString(),
+    customerId: customer.id.toHexString(),
     date: new Date(data.date),
     hour: data.hour
   });
@@ -102,12 +107,12 @@ export async function create(data: {
   return appointment;
 }
 
-export async function remove(data: { id: number }) {
-  await Models.Appointment.delete({ id: data.id });
+export async function remove(data: { id: string }) {
+  await Models.Appointment.delete({ id: new ObjectId(data.id) });
 }
 
 export async function update(data: {
-  id: number;
+  id: string;
   date?: string;
   hour?: number;
 }) {
@@ -124,7 +129,6 @@ export async function update(data: {
 export async function getHoursTotal() {
   const hours: number[] = [];
   for (let i = 0; i < 24; i++)
-    hours[i] = await Models.Appointment.count({ where: { hour: i + 1 } });
-
+    hours[i] = await Models.Appointment.count({ hour: i + 1 });
   return hours;
 }
