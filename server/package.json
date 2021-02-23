@@ -8,7 +8,7 @@
   "scripts": {
     "test": "set NODE_ENV=test&&jest --verbose --runInBand",
     "test:watch": "set NODE_ENV=test&&jest --verbose --runInBand --watch",
-    "dev": "set NODE_ENV=development&&nodemon src/index.ts",
+    "dev": "set NODE_ENV=development&&nodemon --legacy-watch src/index.ts",
     "dev:generate": "set NODE_ENV=development&&nodemon --exec \"npm run generate-demo&&ts-node src/index.ts\"",
     "build": "set NODE_ENV=production&&tsc --project .",
     "start": "set NODE_ENV=production&&node dist/src/index.js",

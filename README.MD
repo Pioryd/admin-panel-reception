@@ -1,5 +1,6 @@
 # Reception (admin panel)
 
+![main branch - build and test](https://github.com/Pioryd/admin-panel-reception/actions/workflows/docker-publish.yml/badge.svg?branch=main)
 ## Live preview: [DEMO](https://reception-304016.ew.r.appspot.com/)
 
 ## Build with
