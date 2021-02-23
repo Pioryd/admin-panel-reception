@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  server:
+    build:
+      target: development
+    ports:
+      - 8080:8080
+    environment:
+      NODE_ENV: "development"
+    volumes:
+      - ./:/app
+
+  client:
+    build:
+      target: development
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app
