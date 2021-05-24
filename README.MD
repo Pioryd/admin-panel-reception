@@ -1,7 +1,7 @@
 # Reception (admin panel)
 
 ![main branch - build and test](https://github.com/Pioryd/admin-panel-reception/actions/workflows/docker-publish.yml/badge.svg?branch=main)
-## Live preview: [DEMO](http://ec2-13-58-22-232.us-east-2.compute.amazonaws.com/admin-panel-reception)
+## Live preview: [DEMO](http://ec2-3-142-143-221.us-east-2.compute.amazonaws.com/admin-panel-reception)
 
 ## Build with
 
